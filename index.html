@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Quiz de Anatomia</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f5f5f5;
+      padding: 20px;
+      text-align: center;
+    }
+    .quiz-container {
+      max-width: 600px;
+      margin: auto;
+      background: #fff;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    h2 {
+      color: #333;
+    }
+    .question {
+      margin: 20px 0;
+      font-weight: bold;
+    }
+    .options button {
+      display: block;
+      margin: 8px auto;
+      padding: 10px;
+      width: 80%;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      background: #eee;
+      transition: background 0.3s;
+    }
+    .options button:hover {
+      background: #ccc;
+    }
+    #final-options {
+      display: none;
+      margin-top: 20px;
+    }
+    #final-options button {
+      background: #4caf50;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+  <div class="quiz-container">
+    <h2>Quiz de Anatomia</h2>
+    <div id="quiz"></div>
+    <button id="submit">Enviar Respostas</button>
+    <div id="result"></div>
+
+    <!-- Opções extras -->
+    <div id="final-options">
+      <h3>Escolha uma opção:</h3>
+      <button onclick="enviarResposta('Ir no rodízio Kozan no dia 06/09/2025 às 19h')">1 - Kozan</button>
+      <button onclick="enviarResposta('Conhecer o restaurante Terrazzo Cucina no dia 06/09/2025 às 19h')">2 - Terrazzo</button>
+      <button onclick="enviarResposta('Não ir a nenhum lugar')">3 - Não ir</button>
+    </div>
+  </div>
+
+  <script>
+    const quizData = [
+      {question: "Qual é o maior órgão do corpo humano?", options: ["Pulmão", "Pele", "Fígado"], correct: 1},
+      {question: "Qual é a principal função dos rins?", options: ["Produzir insulina", "Filtrar o sangue e eliminar resíduos", "Regular a temperatura corporal"], correct: 1},
+      {question: "Qual é a principal função do diafragma?", options: ["Auxiliar na respiração", "Produzir enzimas digestivas", "Bombear sangue"], correct: 0},
+      {question: "Qual é a função dos glóbulos vermelhos no sangue?", options: ["Combater microrganismos", "Transportar oxigênio", "Regular a pressão arterial"], correct: 1},
+      {question: "Qual é o osso mais longo do corpo humano?", options: ["Fêmur", "Úmero", "Tíbia"], correct: 0},
+      {question: "Qual é a função do estômago no sistema digestório?", options: ["Absorver nutrientes", "Produzir bile", "Iniciar a digestão das proteínas"], correct: 2},
+      {question: "Qual músculo é conhecido como o 'músculo do tchauzinho'?", options: ["Bíceps braquial", "Tríceps braquial", "Deltóide"], correct: 1},
+      {question: "Qual estrutura conecta os músculos aos ossos?", options: ["Ligamentos", "Tendões", "Cartilagens"], correct: 1},
+      {question: "Onde está localizado o fígado?", options: ["Lado direito do abdômen", "Lado esquerdo do abdômen", "Região pélvica"], correct: 0},
+      {question: "Qual é a função da medula espinhal?", options: ["Regular a produção hormonal", "Transmitir impulsos nervosos", "Produzir glóbulos vermelhos"], correct: 1}
+    ];
+
+    const quizContainer = document.getElementById("quiz");
+    const submitBtn = document.getElementById("submit");
+    const resultEl = document.getElementById("result");
+    const finalOptions = document.getElementById("final-options");
+
+    // Renderizar perguntas
+    quizData.forEach((q, i) => {
+      const qDiv = document.createElement("div");
+      qDiv.classList.add("question");
+      qDiv.innerHTML = `<p>${i+1}. ${q.question}</p>`;
+      const optDiv = document.createElement("div");
+      optDiv.classList.add("options");
+      q.options.forEach((opt, idx) => {
+        optDiv.innerHTML += `
+          <label>
+            <input type="radio" name="q${i}" value="${idx}"> ${opt}
+          </label><br>`;
+      });
+      qDiv.appendChild(optDiv);
+      quizContainer.appendChild(qDiv);
+    });
+
+    // Verificar respostas
+    submitBtn.addEventListener("click", () => {
+      let score = 0;
+      quizData.forEach((q, i) => {
+        const answer = document.querySelector(`input[name="q${i}"]:checked`);
+        if (answer && parseInt(answer.value) === q.correct) {
+          score++;
+        }
+      });
+
+      if (score === quizData.length) {
+        resultEl.innerHTML = `<p style="color:green;">Parabéns! Você acertou todas 👏</p>`;
+        finalOptions.style.display = "block";
+      } else {
+        resultEl.innerHTML = `<p style="color:red;">Você acertou ${score} de ${quizData.length}. Tente novamente!</p>`;
+        finalOptions.style.display = "none";
+      }
+    });
+
+    // Função para enviar resposta pelo WhatsApp
+    function enviarResposta(texto) {
+      const telefone = "5514991091983"; // Coloque seu número com DDI e DDD, ex: 5511999999999
+      const url = `https://wa.me/${telefone}?text=${encodeURIComponent("Minha escolha foi: " + texto)}`;
+      window.open(url, "_blank");
+    }
+  </script>
+</body>
+</html>
